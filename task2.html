@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Task 2</title>
+    <style>
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        span {
+            font-size: 30px;
+            font-weight: 900;
+        }
+
+        #left,
+        #right {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: calc(50% - 10px);
+            float: left;
+        }
+
+        #left .top {
+            height: 30%;
+            min-height: 100px;
+            border: 1px solid black;
+            background-color: #EA4335;
+        }
+
+        #left .bottom {
+            height: 70%;
+            min-height: 100px;
+            border: 1px solid black;
+            background-color: #4285F4;
+        }
+
+        #right .top {
+            height: 60%;
+            min-height: 100px;
+            border: 1px solid black;
+            background-color: #34A853;
+        }
+
+        #right .bottom {
+            height: 40%;
+            min-height: 100px;
+            border: 1px solid black;
+            background-color: #FBBC05;
+        }
+
+        .divider-horizontal,
+        .divider-vertical {
+            background-color: #e9e9e9;
+        }
+
+        .divider-horizontal {
+            height: 20px;
+            cursor: row-resize;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .divider-vertical {
+            width: 20px;
+            height: 100%;
+            cursor: col-resize;
+            float: left;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slider,
+        .arrow {
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+            color: #212121;
+        }
+
+        #divider-vertica:hover{
+            color: #ff6b08;
+         }
+
+        .slider:hover,
+        .arrow:hover {
+            color: #ff6b08;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="left">
+        <div class="top"></div>
+        <div class="divider-horizontal" id="left-divider">
+            <span class="slider">=</span>
+        </div>
+        <div class="bottom"></div>
+    </div>
+    <div class="divider-vertical">
+        <span class="arrow"><</span>
+    </div>
+    <div id="right">
+        <div class="top"></div>
+        <div class="divider-horizontal" id="right-divider">
+            <span class="slider">=</span>
+        </div>
+        <div class="bottom"></div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script>
+        
+        $(function () {
+            let isDraggingHorizontalLeft = false;
+            let isDraggingHorizontalRight = false;
+            let isDraggingVertical = false;
+            let isLeftHidden = false;
+
+            $('#left-divider').mousedown(function () {
+                isDraggingHorizontalLeft = true;
+            });
+
+            $('#right-divider').mousedown(function () {
+                isDraggingHorizontalRight = true;
+            });
+
+            $('.divider-vertical').mousedown(function () {
+                isDraggingVertical = true;
+            });
+
+            $(document).mouseup(function () {
+                isDraggingHorizontalLeft = false;
+                isDraggingHorizontalRight = false;
+                isDraggingVertical = false;
+            });
+
+            $(document).mousemove(function (e) {
+                if (isDraggingHorizontalLeft) {
+                    const topHeight = e.pageY - $('#left .top').offset().top;
+                    const bottomHeight = $(window).height() - topHeight;
+
+                    if (topHeight >= 100 && bottomHeight >= 130) { 
+                        $('#left .top').css('height', topHeight);
+                        $('#left .bottom').css('height', bottomHeight - 20); 
+                    }
+                }
+
+                if (isDraggingHorizontalRight) {
+                    const topHeight = e.pageY - $('#right .top').offset().top;
+                    const bottomHeight = $(window).height() - topHeight;
+
+                    if (topHeight >= 100 && bottomHeight >= 120) { 
+                        $('#right .top').css('height', topHeight);
+                        $('#right .bottom').css('height', bottomHeight - 20); 
+                    }
+                }
+
+                if (isDraggingVertical) {
+                    const leftWidth = e.pageX;
+                    const rightWidth = $(window).width() - leftWidth;
+
+                    if (leftWidth >= 100 && rightWidth >= 110) { 
+                        $('#left').css('width', leftWidth - 10 + 'px'); 
+                        $('#right').css('width', rightWidth - 10 + 'px');  
+                    }
+                }
+            });
+
+            $('.divider-vertical').dblclick(function () {
+                if (isLeftHidden) {
+                    const halfWidth = $(window).width() / 2;
+                    $('#left').css('width', halfWidth - 10 + 'px'); 
+                    $('#right').css('width', halfWidth - 10 + 'px');  
+                    $('.arrow').text('<');
+                    isLeftHidden = false;
+                } else {
+                    $('#left').css('width', '0');
+                    $('#right').css('width', $(window).width() - 20 + 'px');  
+                    $('.arrow').text('>');
+                    isLeftHidden = true;
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>

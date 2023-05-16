@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 1</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-top: 100px;
+            margin-bottom: 50px;    
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            margin: auto;
+            width: 400px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="number"],
+        input[type="checkbox"],
+        button {
+            margin-bottom: 10px;
+        }
+
+        input[type="number"] {
+            margin-left: 10px;
+            margin-right: 15px;
+            padding: 2px;
+            width: 50px;
+            text-align: center;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            padding: 10px 60px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        #output{
+            width: 280px;
+            text-align: center;
+            padding: 8px 10px;
+        }
+
+        .input{
+            display: flex;
+            align-items: center;
+            
+        }
+        .res{
+            display: inline;
+            text-align: center;
+        }
+        .copy-button{
+            width: max-content;
+            padding: 10px 20px;
+        }
+        .out{
+            font-weight: 600;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Random String Generator</h1>
+    <form id="string-generator">
+        <div class="input">
+            <label for="string-length">String should be</label>
+            <input type="number" id="string-length" placeholder="10">
+            <label for="allowed-characters">characters long.</label>
+        </div>
+        <p>Which characters are allowed to occur in the strings?</p>
+        <label for="use-digits">
+            <input type="checkbox" id="use-digits" checked> Numeric digits (0-9)
+        </label>
+        <label for="use-upper">
+            <input type="checkbox" id="use-upper" checked> Uppercase letters (A-Z)
+        </label>
+        <label for="use-lower">
+            <input type="checkbox" id="use-lower" checked> Lowercase letters (a-z)
+        </label>
+        <button type="submit">Generate</button>
+    </form>
+    <div class="res">
+        <label class="out" for="output"> Result:
+            <input id="output" readonly>
+            <button class="copy-button">Copy</button>
+        </label>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+                $("#string-length").on("input", function () {
+                    let value = $(this).val();
+                    value = value.replace(/\D/g, "");
+                    value = Math.max(Math.min(30, value));
+                    $(this).val(value);
+                });
+            });
+
+            $("#string-generator").submit((e) => {
+                e.preventDefault();
+
+                const length = $("#string-length").val();
+                const useDigits = $("#use-digits").is(":checked");
+                const useUpper = $("#use-upper").is(":checked");
+                const useLower = $("#use-lower").is(":checked");
+
+                let chars = '';
+                if (useDigits) chars += '0123456789';
+                if (useUpper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                if (useLower) chars += 'abcdefghijklmnopqrstuvwxyz';
+
+                let result = '';
+                for (let i = 0; i < length; i++) {
+                    result += chars[Math.floor(Math.random() * chars.length)];
+                }
+
+                $("#output").val(result);
+            });
+
+            $(".copy-button").click(() => {
+                const output = $("#output");
+                output.select();
+                document.execCommand("copy");
+                alert("Copied to clipboard: " + output.val());
+            });
+    </script>
+</body>
+
+</html>
